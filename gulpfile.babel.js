@@ -18,7 +18,7 @@ const imagemin = require('gulp-imagemin');
 
 
 const sass = gulpSass(dartSass);
-const imagemin = await import('gulp-imagemin');
+//const imagemin = await import('gulp-imagemin');
 
 
 const PRODUCTION = yargs.argv.prod;
@@ -47,7 +47,7 @@ export const styles = () => {
 export const images = () => {
   
   return gulp.src(paths.images.src)
-    .pipe(gulpIf(PRODUCTION, imagemin()))
+    .pipe(gulpIf(PRODUCTION, imagemin([], {})))
     .pipe(gulp.dest(paths.images.dest));
 }
 
