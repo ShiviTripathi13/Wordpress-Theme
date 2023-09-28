@@ -11,12 +11,13 @@ import del from 'del';
 import { hideBin } from 'yargs/helpers';
 import webpack from 'webpack-stream';
 import named from 'vinyl-named';
+import browserSync from 'browser-sync';
 //import imagemin from 'gulp-imagemin';
 
 //import uglify from 'gulp-uglify';
 
 
-
+const server = browserSync.create();
 const imagemin = require('gulp-imagemin');
 
 const sass = gulpSass(dartSass);
@@ -46,6 +47,18 @@ const paths = {
   
 }
 
+
+export const serve = (done) => {
+  server.init ({
+    proxy: "http://localhost:8888/shivitestthemes"
+  });
+  done();
+}
+
+export const reload = (done) => {
+  server.reload();
+  done();
+}
 //for deleting files/images/data in dist folder
 export const clean = () =>  del(['dist']);
 
@@ -66,10 +79,12 @@ export const images = () => {
 }
 
 export const watch = () => {
-  gulp.watch('src/assets/scss/**/*.scss', styles);
-  gulp.watch('src/assets/js/**/*.js', scripts);
-  gulp.watch(paths.images.src, images);
-  gulp.watch(paths.other.src, copy);
+  gulp.watch('src/assets/scss/**/*.scss', gulp.series(styles, reload));
+  gulp.watch('src/assets/js/**/*.js', gulp.series(scripts, reload));
+  gulp.watch('**/*.php', reload);
+  gulp.watch(paths.images.src, gulp.series(images, reload));
+  gulp.watch(paths.other.src, gulp.series(copy, reload));
+  
 }
 
 
@@ -109,7 +124,7 @@ devtool: !PRODUCTION ? 'inline-source-map' : false,
   .pipe(gulp.dest(paths.scripts.dest));
 }
 
-export const dev = gulp.series(clean, gulp.parallel(styles, scripts, images, copy), watch);
+export const dev = gulp.series(clean, gulp.parallel(styles, scripts, images, copy), serve, watch);
 export const build = gulp.series(clean, gulp.parallel(styles, scripts, images, copy));
 
 

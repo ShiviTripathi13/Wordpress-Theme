@@ -1,7 +1,7 @@
-import $ from 'jquery';
+import 'jquery';
 import './components/slider.js';
 
-//const $ = jQuery;
+const $ = jQuery;
 var x = 0;
 
 $('body').click(() => {
