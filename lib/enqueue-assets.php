@@ -1,26 +1,26 @@
 <?php
 
-function shivitestthemes_assets() {
-    wp_enqueue_style('shivitestthemes-stylesheet', get_template_directory_uri() .'/dist/assests/css/bundle.css',
+function _themename_assets() {
+    wp_enqueue_style('_themename-stylesheet', get_template_directory_uri() .'/dist/assests/css/bundle.css',
      array(), '1.0.0',  'all');
 
      //wp_enqueue_script('jquery');
      
-     wp_enqueue_script('shivitestthemes-scripts', get_template_directory_uri() .'/dist/assests/js/bundle.js',
+     wp_enqueue_script(' _themename-scripts', get_template_directory_uri() .'/dist/assests/js/bundle.js',
       array('jquery'),  true);
 }
 
-add_action('wp_enqueue_scripts', 'shivitestthemes_assets');
+add_action('wp_enqueue_scripts', '_themename_assets');
 
 
 
-function shivitestthemes_admin_assets() {
-    wp_enqueue_style('shivitestthemes-admin-stylesheet', get_template_directory_uri() .'/dist/assests/css/admin.css',
+function _themename_admin_assets() {
+    wp_enqueue_style('_themename-admin-stylesheet', get_template_directory_uri() .'/dist/assests/css/admin.css',
      array(), '1.0.0',  'all');
 
 
-    wp_enqueue_script('shivitestthemes-admin-scripts', get_template_directory_uri() .'/dist/assests/js/admin.js',
+    wp_enqueue_script('_themename-admin-scripts', get_template_directory_uri() .'/dist/assests/js/admin.js',
      array(),true);
 }
 
-add_action('admin_enqueue_scripts', 'shivitestthemes_admin_assets');
+add_action('admin_enqueue_scripts', '_themename_admin_assets');

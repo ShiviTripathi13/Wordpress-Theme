@@ -10,14 +10,14 @@
         </h2>
 
         <div>
-            <?php shivitestthemes_post_meta(); ?>
+            <?php _themename_post_meta(); ?>
         </div>
 
         <div>
             <?php the_excerpt(); ?>
         </div>
 
-        <?php shivitestthemes_read_more_link(); ?>
+        <?php _themename_read_more_link(); ?>
 
     <?php } ?>
         <br><br>
@@ -26,21 +26,21 @@
 <?php } else { ?>
     <!-- else the following message will be displayed -->
     <!-- the __() will return the string in respective language- english/chinese/hindi -->
-    <p> <?php  esc_html_e('Sorry, nothing matches your criteria.','shivitestthemes'); ?></p>
+    <p> <?php  esc_html_e('Sorry, nothing matches your criteria.','_themename'); ?></p>
 <?php } ?>
 
 <?php
 
 //$comments = 1;
 
-// printf(_n('One comment', '%s Comments', $comments, 'shivitestthemes'), $comments);
+// printf(_n('One comment', '%s Comments', $comments, '_themename'), $comments);
 
 $city = 'london';
 
-//echo esc_html__('Your city is', 'shivitestthemes'). $city;
+//echo esc_html__('Your city is', '_themename'). $city;
 
 printf(
-    esc_html__('Your city is %s', 'shivitestthemes'),
+    esc_html__('Your city is %s', '_themename'),
     $city
 );
 

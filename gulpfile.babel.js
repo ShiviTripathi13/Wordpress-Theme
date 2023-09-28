@@ -14,6 +14,8 @@ import named from 'vinyl-named';
 import browserSync from 'browser-sync';
 import zip from 'gulp';
 import path from 'path';
+import replace from 'gulp-replace';
+import  info  from './package.json';
 
 
 const server = browserSync.create();
@@ -44,19 +46,22 @@ const paths = {
     src: ['src/assets/**/*', '!src/assets/{images, js, scss}',
           '!src/assets/{images, js, scss}/**/*'],
     dest: 'dist/assests'
-  },
+  }
   
   /**********************************************************
   creating a package for the final bundling
   also defining the files/folders to be ignored with '!file/foldername'
   ***********************************************************/
 
+  /****** 
+  commenting out this section waiting for 'invalid glob arguements error' to be resolved
   package: {
-    src:  ['**/*', '!.vscode', '!node_modules{,/**}', '!packaged{,/**}', '!src{,/**}', 
+    src:  ['**', '!.vscode', '!node_modules{,/**}', '!packaged{,/**}', '!src{,/**}', 
           '!.babelrc', '!.gitignore', '!gulpfile.babel.js', ,'!npm-shrinkwrap.json', 
           '!package.json', '!package-lock.json'] ,
     dest: 'packaged'
   }
+  */
   
 }
 
@@ -144,16 +149,24 @@ devtool: !PRODUCTION ? 'inline-source-map' : false,
 
 /****** creating task for compressing files and folders in zip package *******/
 
+/*****commenting out till error gets resolved 
 export const compress = () => {
   return (gulp.src(paths.package.src))
-    .pipe(zip('shivitestthemes.zip'))
+    .pipe(replace('_themename', info.name))
+    .pipe(zip('${info.name}.zip'))
     .pipe(gulp.dest(paths.package.dest));
 }
+*******/
 
 export const dev = gulp.series(clean, gulp.parallel(styles, scripts, images, copy), serve, watch);
 export const build = gulp.series(clean, gulp.parallel(styles, scripts, images, copy));
+
+/*** 
+ ****** waiting for error to get resolved 
+
 export const bundle = gulp.series(build, compress);
 
+***/
 export default dev;
 
 
