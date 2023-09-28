@@ -12,9 +12,8 @@ import { hideBin } from 'yargs/helpers';
 import webpack from 'webpack-stream';
 import named from 'vinyl-named';
 import browserSync from 'browser-sync';
-//import imagemin from 'gulp-imagemin';
-
-//import uglify from 'gulp-uglify';
+import zip from 'gulp';
+import path from 'path';
 
 
 const server = browserSync.create();
@@ -25,6 +24,8 @@ const sass = gulpSass(dartSass);
 
 
 const PRODUCTION = yargs(hideBin(process.argv)).argv.prod;
+
+/******** defining paths *********/
 
 const paths = {
   styles: {
@@ -43,11 +44,23 @@ const paths = {
     src: ['src/assets/**/*', '!src/assets/{images, js, scss}',
           '!src/assets/{images, js, scss}/**/*'],
     dest: 'dist/assests'
+  },
+  
+  /**********************************************************
+  creating a package for the final bundling
+  also defining the files/folders to be ignored with '!file/foldername'
+  ***********************************************************/
+
+  package: {
+    src:  ['**/*', '!.vscode', '!node_modules{,/**}', '!packaged{,/**}', '!src{,/**}', 
+          '!.babelrc', '!.gitignore', '!gulpfile.babel.js', ,'!npm-shrinkwrap.json', 
+          '!package.json', '!package-lock.json'] ,
+    dest: 'packaged'
   }
   
 }
 
-
+/*******creating a task for server **********/
 export const serve = (done) => {
   server.init ({
     proxy: "http://localhost:8888/shivitestthemes"
@@ -55,11 +68,12 @@ export const serve = (done) => {
   done();
 }
 
+/******* creating a task for auto reload files *********/
 export const reload = (done) => {
   server.reload();
   done();
 }
-//for deleting files/images/data in dist folder
+/****** creating a task for cleaning/deleting files/images/data in dist folder *********/
 export const clean = () =>  del(['dist']);
 
 export const styles = () => {
@@ -68,9 +82,11 @@ export const styles = () => {
       .pipe(sass().on('error', sass.logError))
       .pipe(gulpIf(PRODUCTION, cleanCSS({compatibility: 'ie8'})))
       .pipe(gulpIf(!PRODUCTION, sourcemaps.write()))
-      .pipe(gulp.dest(paths.styles.dest));
+      .pipe(gulp.dest(paths.styles.dest))
+      .pipe(server.stream());
 }
 
+/***** creating a task to compress images *****/
 export const images = () => {
   
   return gulp.src(paths.images.src)
@@ -78,8 +94,9 @@ export const images = () => {
     .pipe(gulp.dest(paths.images.dest));
 }
 
+/******** creating a watch task *******/
 export const watch = () => {
-  gulp.watch('src/assets/scss/**/*.scss', gulp.series(styles, reload));
+  gulp.watch('src/assets/scss/**/*.scss', styles);
   gulp.watch('src/assets/js/**/*.js', gulp.series(scripts, reload));
   gulp.watch('**/*.php', reload);
   gulp.watch(paths.images.src, gulp.series(images, reload));
@@ -93,7 +110,7 @@ export const copy= () => {
     .pipe(gulp.dest(paths.other.dest));
 }
 
-////minimizing contents in js files
+/******* minimizing contents in js files *******/
 
 export const scripts = () => {
   return gulp.src(paths.scripts.src)
@@ -124,32 +141,19 @@ devtool: !PRODUCTION ? 'inline-source-map' : false,
   .pipe(gulp.dest(paths.scripts.dest));
 }
 
+
+/****** creating task for compressing files and folders in zip package *******/
+
+export const compress = () => {
+  return (gulp.src(paths.package.src))
+    .pipe(zip('shivitestthemes.zip'))
+    .pipe(gulp.dest(paths.package.dest));
+}
+
 export const dev = gulp.series(clean, gulp.parallel(styles, scripts, images, copy), serve, watch);
 export const build = gulp.series(clean, gulp.parallel(styles, scripts, images, copy));
-
+export const bundle = gulp.series(build, compress);
 
 export default dev;
 
 
-/*
-{
-          module: {
-              rules: [
-                  {
-              test: /\.js$/,
-              use: {
-                      loader: 'babel-loader',
-                  options: {
-                  presets: ['@babel/preset-env'] //or ['babel-preset-env']
-              }
-              }
-          }
-      ]
-          },
-      output: {
-          filename: 'bundle.js'
-          },
-      devtool: !PRODUCTION ? 'inline-source-map' : false,
-          mode: PRODUCTION ? 'production' : 'development' //add this
-  })
-*/
