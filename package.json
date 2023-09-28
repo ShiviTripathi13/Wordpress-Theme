@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "babel-loader": "^9.1.3",
-    "gulp-imagemin": "^7.0.1"
+    "gulp-imagemin": "^7.0.1",
+    "jquery": "^3.7.1"
   }
 }
