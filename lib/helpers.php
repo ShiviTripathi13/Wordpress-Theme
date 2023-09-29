@@ -1,4 +1,5 @@
 <?php
+if(!function_exists('_themename_post_meta')) {
 function _themename_post_meta(){ 
    /* translators: %s: Post Date */
     printf(
@@ -14,6 +15,7 @@ function _themename_post_meta(){
     );
     
 } 
+}
 
 
 function _themename_read_more_link(){ 

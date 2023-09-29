@@ -23,27 +23,20 @@
         <br><br>
     <?php the_posts_pagination( ); ?>
 
+    <!-- adding action hook to allow other developers to interact with the theme code -->
+        <?php do_action('_themename_after_pagination'); ?>
+        
 <?php } else { ?>
     <!-- else the following message will be displayed -->
     <!-- the __() will return the string in respective language- english/chinese/hindi -->
-    <p> <?php  esc_html_e('Sorry, nothing matches your criteria.','_themename'); ?></p>
+    <p> <?php echo apply_filters('_themename_no_posts_text',
+                esc_html__('Sorry, nothing matches your criteria.',
+                            '_themename')); 
+        ?>
+    </p>
+
 <?php } ?>
 
-<?php
 
-//$comments = 1;
-
-// printf(_n('One comment', '%s Comments', $comments, '_themename'), $comments);
-
-$city = 'london';
-
-//echo esc_html__('Your city is', '_themename'). $city;
-
-printf(
-    esc_html__('Your city is %s', '_themename'),
-    $city
-);
-
-?>
 
 <?php get_footer(); ?>
