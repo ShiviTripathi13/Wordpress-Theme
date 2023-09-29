@@ -20,7 +20,7 @@ function _themename_post_meta(){
 
 function _themename_read_more_link(){ 
     
-    echo '<a href= "' .esc_url(get_permalink()) . ' " title= " ' .  the_title_attribute(['echo' => false ]) . ' ">';
+    echo '<a class= "c-post__readmore" href= "' .esc_url(get_permalink()) . ' " title= " ' .  the_title_attribute(['echo' => false ]) . ' ">';
     /* translators: %s: Post title */
     printf(
         wp_kses(
